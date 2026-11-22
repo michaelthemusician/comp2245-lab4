@@ -1,6 +1,7 @@
 <?php
-require __DIR__ . '/db.php';
+header('Content-Type: application/json; charset=UTF-8');
 
+require __DIR__ . '/db.php';
 // Search text
 $search = $_GET['q'] ?? '';
 if (!is_string($search)) {
