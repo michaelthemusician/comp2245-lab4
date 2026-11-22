@@ -31,4 +31,6 @@ read the `catalogue` database in MySQL.
 
 ## Browsers tested
 
-- 
+- Firefox
+- Chrome
+- Edge (Does not work on my system as it is installed as a flatpak app, which is sandbobxed)
