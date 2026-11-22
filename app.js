@@ -1,5 +1,7 @@
 const form = document.querySelector("#search-form");
 const subjectSelect = form.elements.subject;
+const statusMessage = document.querySelector("#status");
+const tbody = document.querySelector("#results tbody");
 
 async function loadSubjects() {
     const response = await fetch("subjects.php");
@@ -20,3 +22,58 @@ async function loadSubjects() {
 }
 
 loadSubjects().catch((error) => console.error(error));
+
+
+
+async function loadBooks() {
+    const params = new URLSearchParams(new FormData(form));
+    const response = await fetch(`books.php?${params}`);
+
+    if (!response.ok) {
+        throw new Error(`books.php returned ${response.status}`);
+    }
+
+    const books = await response.json();
+
+    tbody.replaceChildren();
+
+    for (const book of books) {
+        const row = document.createElement("tr");
+
+        const values = [
+            book.title,
+            book.author,
+            book.year,
+            book.subject,
+            `${book.available} of ${book.copies}`,
+        ];
+
+        for (const value of values) {
+            const cell = document.createElement("td");
+            cell.textContent = value;
+            row.appendChild(cell);
+        }
+
+        // No copies on the shelf: show the last cell in red
+        if (book.available === 0) {
+            row.lastElementChild.classList.add("out");
+        }
+
+        tbody.appendChild(row);
+    }
+
+    if (books.length === 0) {
+        statusMessage.textContent = "No books match your search.";
+    } else if (books.length === 1) {
+        statusMessage.textContent = "1 book found.";
+    } else {
+        statusMessage.textContent = `${books.length} books found.`;
+    }
+}
+
+form.addEventListener("submit", (event) => {
+    event.preventDefault();
+    loadBooks().catch((error) => console.error(error));
+});
+
+loadBooks().catch((error) => console.error(error));
