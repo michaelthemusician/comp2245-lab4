@@ -70,7 +70,8 @@ async function loadBooks() {
         statusMessage.textContent = `${books.length} books found.`;
     }
 }
-s
+
+
 const searchButton = form.querySelector("button");
 
 async function search() {
@@ -79,11 +80,12 @@ async function search() {
 
     try {
         await loadBooks();
-        searchButton.disabled = false;
     } catch (error) {
         console.error(error);
         tbody.replaceChildren();
         statusMessage.textContent = "Couldn't load the books. Please try again.";
+    } finally {
+        searchButton.disabled = false;
     }
 }
 
