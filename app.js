@@ -70,10 +70,29 @@ async function loadBooks() {
         statusMessage.textContent = `${books.length} books found.`;
     }
 }
+s
+const searchButton = form.querySelector("button");
+
+async function search() {
+    searchButton.disabled = true;
+    statusMessage.textContent = "Searching…";
+
+    try {
+        await loadBooks();
+        searchButton.disabled = false;
+    } catch (error) {
+        console.error(error);
+        tbody.replaceChildren();
+        statusMessage.textContent = "Couldn't load the books. Please try again.";
+    }
+}
 
 form.addEventListener("submit", (event) => {
     event.preventDefault();
-    loadBooks().catch((error) => console.error(error));
+    search();
 });
 
-loadBooks().catch((error) => console.error(error));
+form.elements.subject.addEventListener("change", search);
+form.elements.available.addEventListener("change", search);
+
+search();
